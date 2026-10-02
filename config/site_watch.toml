@@ -1,0 +1,27 @@
+# Pages to watch for tasks/site_watch.py.
+#
+# Each page is fetched once, diffed against its last snapshot, and (only on
+# a real change) judged by the model against `rule`. One bad page (a dead
+# link, a selector that matches nothing) is recorded as that page's own
+# error and never blocks the others. The very first check of a page only
+# establishes its baseline snapshot -- it is never judged or alerted on.
+#
+# This row points at books.toscrape.com, a public sandbox site built for
+# scraping practice (stable content, no real purchases) -- see
+# config/watchlist.toml. Replace it with your own page(s).
+
+[[pages]]
+name = "A Light in the Attic (toscrape sandbox)"
+url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+selector = "article"
+rule = "only if the price or the stock availability text changes"
+fields = { price = "number" }
+# notify = true
+
+# [[pages]]
+# name = "Example notices"
+# url = "https://example.com/notices"
+# rule = "only if a new notice mentions a service outage or a price change"
+# # selector = "main"              # optional: bare tag / #id / .class (default: full-page article text)
+# # notify = true                   # optional: lmsa.notify alert when a change is judged relevant
+# # fields = { price = "number" }   # optional typed fields ("number" | "text" | "bool"), extracted + charted

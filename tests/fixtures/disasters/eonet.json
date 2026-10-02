@@ -1,0 +1,33 @@
+{
+  "title": "EONET Events",
+  "events": [
+    {
+      "id": "EONET_00001",
+      "title": "Wildfire - Sequoia Complex, California",
+      "categories": [{"id": "wildfires", "title": "Wildfires"}],
+      "sources": [{"id": "InciWeb", "url": "https://inciweb.wildfire.gov/incident/00001"}],
+      "geometry": [
+        {"date": "2026-09-23T00:00:00Z", "type": "Point", "coordinates": [-119.0, 36.5]},
+        {"date": "2026-09-24T00:00:00Z", "type": "Point", "coordinates": [-119.2, 36.6]}
+      ]
+    },
+    {
+      "id": "EONET_00002",
+      "title": "Severe Storm - South Pacific",
+      "categories": [{"id": "severeStorms", "title": "Severe Storms"}],
+      "sources": [{"id": "JTWC", "url": "https://www.metoc.navy.mil/jtwc/jtwc.html"}],
+      "geometry": [
+        {"date": "2026-09-23T18:00:00Z", "type": "Point", "coordinates": [172.3, -18.1]}
+      ]
+    },
+    {
+      "id": "EONET_00003",
+      "title": "Unclassified oddity",
+      "categories": [{"id": "seaLakeIce", "title": "Sea and Lake Ice"}],
+      "sources": [],
+      "geometry": [
+        {"date": "2026-09-22T00:00:00Z", "type": "Point", "coordinates": [-45.0, 70.0]}
+      ]
+    }
+  ]
+}

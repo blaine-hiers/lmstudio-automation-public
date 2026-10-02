@@ -1,0 +1,18 @@
+# Config for `tasks.doc_inbox`. All keys optional -- omit the file entirely
+# to get the defaults shown here. The inbox itself is LMSA_DOC_INBOX_DIR
+# (or --inbox DIR).
+
+# Where filed documents go. Default: a "Filed" folder inside the inbox (the
+# inbox scan is not recursive, so it never re-reads them). Moves are
+# rename-only, so keep the archive on the same drive as the inbox. A relative
+# archive_dir is relative to the inbox, never to the current directory.
+# archive_dir = "~/Documents/Archive"
+
+# Destination under the archive. Fields: {doc_type} {year} {month} {date}
+# {correspondent} {title}; {ext} (the file's own extension) is always added
+# at the end. Each "/"-separated part is sanitised into one safe folder or
+# file name.
+template = "{doc_type}/{year}/{date} {correspondent} - {title}{ext}"
+
+# Leave files younger than this alone (a scanner may still be writing them).
+min_age_minutes = 10

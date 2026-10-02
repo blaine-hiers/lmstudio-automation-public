@@ -1,0 +1,19 @@
+# Config for `tasks.bookmarks`. All keys optional -- omit the file entirely
+# to get the defaults shown here (commented out).
+
+# Path to Chrome's / Edge's `Bookmarks` JSON file. Default: the standard
+# Windows "Default" profile under each browser's User Data dir
+# (%LOCALAPPDATA%\Google\Chrome\User Data\Default\Bookmarks and
+# %LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Bookmarks). Set to a
+# different profile's path, or "" to skip that browser entirely.
+# chrome_path = "~/AppData/Local/Google/Chrome/User Data/Default/Bookmarks"
+# edge_path = "~/AppData/Local/Microsoft/Edge/User Data/Default/Bookmarks"
+
+# Max new (never-checked) URLs fetched in one run -- keeps a first run over
+# a large bookmark set from hammering the network. The rest are picked up
+# on later runs.
+# fetch_limit = 25
+
+# How far back to look for self-sent emails on the very first run (no
+# cursor yet). Later runs pick up from where the last one left off.
+# self_sent_lookback_days = 365

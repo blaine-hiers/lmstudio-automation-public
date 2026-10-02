@@ -1,0 +1,22 @@
+# Prediction markets snapshot collector (tasks/markets.py, #60).
+#
+# Each source is queried independently and isolated: a bad query or a
+# broken API never blocks the others (see the run's notes).
+
+[polymarket]
+# Gamma API `tag` filter, one request per tag. Empty list = one untagged
+# request (whatever's active, capped at limit_per_source).
+tags = ["geopolitics", "elections", "world"]
+
+[manifold]
+# search-markets `term`, one request per query. Empty list = skipped
+# (Manifold has no "everything" search worth paging through).
+queries = ["war", "election", "invasion", "ceasefire", "coup"]
+
+[metaculus]
+# `search` filter, one request per query. Empty list = one unfiltered
+# request (most active questions).
+queries = ["geopolitics"]
+
+# Most markets kept per source per query/tag.
+limit_per_source = 100

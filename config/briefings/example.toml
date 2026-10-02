@@ -1,0 +1,84 @@
+# Example briefing -- copy to config/briefings/<name>.toml and edit.
+# Run it:  python -m tasks.briefing --name <name>     (--list shows them all)
+#
+# Every key is checked: an unknown key or table is an error naming it, so a
+# typo never silently switches something off.
+
+[briefing]
+title = "Example briefing"                      # required: the report's title
+description = "Shipping, ports and supply chains, from a few world feeds."
+
+# Scheduling. One [tasks.briefing] entry in config/schedule.toml runs every
+# briefing that says enabled = true and whose last successful run is at least
+# every_hours old. Leave `enabled` out and --list shows the file as "new".
+enabled = false
+every_hours = 20
+
+# What you care about, in plain words. Stories are ranked by how close they
+# are to these (embedding similarity), and the model says why each matters.
+interests = [
+    "Shipping, ports, canals and maritime chokepoints: closures, strikes, attacks on ships.",
+    "Supply chain disruptions that move prices: freight rates, shortages, export bans.",
+]
+
+# Cheap keyword pre-filter: an article that mentions none of these (or, with no
+# keywords, none of the 5+ letter words in `interests`) is dropped before any
+# model call. Plurals match ("port" matches "ports"). prefilter = false turns it off.
+keywords = ["port", "shipping", "canal", "freight", "tanker", "container", "strait", "supply chain"]
+prefilter = true
+
+# Optional ISO 3166 alpha-2 filter: stories the model tags with countries,
+# none of them in this list, are left out. Region names also count as keywords.
+# regions = ["EG", "PA", "SG"]
+
+# Caps (all optional; defaults shown). Every cap that bites is listed in the
+# report's Notes section.
+max_items = 300           # articles collected across all sources
+max_stories = 20          # stories shown (and summarized)
+max_docs_per_story = 6    # sources per story the model reads
+follow_links = true       # fetch the article when a feed/search item has little text
+max_fetch = 20            # at most this many article fetches per run
+cluster_threshold = 0.82  # cosine similarity for two articles to be one story
+half_life_hours = 36      # ranking: a story's weight halves every this many hours
+memory_days = 7           # how long a story keeps its identity between runs
+
+# extensions = ["markets"]   # opt-in engine extensions (registered in code)
+
+# ---- sources --------------------------------------------------------------
+# Common keys on every entry: name, lean, reliability, group, limit, prefilter.
+#   lean         left | center-left | center | center-right | right | state-media | intl | unknown
+#   reliability  high | mixed | low | unknown        (your own tags; default unknown)
+#                leave either out and it's still filled in from config/sources.toml
+#                (matched by name) if that source is tagged there -- see README #69
+#   limit        max items from this entry (1-1000)
+#   prefilter    false exempts this entry's items from the keyword pre-filter above (for
+#                title-only feeds whose keywords only appear in the linked page); they
+#                still go through follow_links and the normal relevance steps. Default true.
+
+[[sources.feeds]]
+name = "BBC World"
+url = "https://feeds.bbci.co.uk/news/world/rss.xml"
+lean = "intl"
+reliability = "high"
+group = "wires"
+
+[[sources.feeds]]
+name = "gCaptain"
+url = "https://gcaptain.com/feed/"
+reliability = "high"
+group = "trade press"
+limit = 30
+
+# SearXNG queries (needs LMSA_SEARXNG_URL; see README "Web search").
+# time_range: day | week | month | year. Optional: categories, language.
+[[sources.search]]
+name = "search: port closures"
+query = "port closure shipping"
+time_range = "day"
+
+# Watched pages (site watch) and named API adapters plug in the same way:
+# [[sources.pages]]
+# url = "https://example.com/notices"
+#
+# [[sources.api]]
+# adapter = "gdelt_doc"      # any adapter registered in lmsa/briefing/adapters/

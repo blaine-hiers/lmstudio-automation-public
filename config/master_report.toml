@@ -1,0 +1,75 @@
+# Master Report (#103): one email bundling several reports. Read by
+# tasks/master_report.py; the dashboard validates edits with the same loader
+# (tasks.master_report.parse_config), so every key below is checked and an
+# unknown key, task, mode or briefing, or a bad time, is an error.
+#
+# Per-machine overrides (recipient, on/off, really send) go in the untracked
+# config/local/master_report.toml, never here:
+#   [master.morning]
+#   enabled = true
+#   send = true
+#   to = ["you@example.com"]
+#
+# [[master]]
+#   name           lowercase letters, digits, '-' or '_'; also `--name`
+#   title          email subject / heading, one line, <= 120 chars (default: the name)
+#   send_at        "HH:MM" local; the scheduled run sends every enabled master
+#                  whose send_at has passed, so a send_at later than
+#                  config/schedule.toml's [tasks.master_report] run is an error.
+#   to             [] = LMSA_IMAP_USER (send to yourself)
+#   enabled        false leaves the master out of scheduled runs
+#   send           false = dry run: writes output/master-report-<name>-<ts>.html
+#                  and a .eml preview, sends nothing. true sends, once a day.
+#   llm_intro      a short intro from the chat model; fails soft to none
+#   max_age_hours  a section whose latest good run is older shows as STALE
+#   skip_empty     leave out an OK/STALE section with nothing in it
+#                  (FAILED and NOT RUN sections are always shown)
+#
+# [[master.section]]  (in email order, at most 30)
+#   task           a module in tasks/ (e.g. "inbox_brief")
+#   briefing       only for task = "briefing": the config/briefings/<name>.toml
+#   mode           "full" (default) = the task's whole latest report, converted
+#                  for email (every card, story, table row; charts/maps left out
+#                  with a note); falls back to its digest if the file is gone
+#                | "digest" = headline numbers + top items | "headline" = numbers
+#                  only | "link" = one line, full report in the attachment
+#   max_items      1-50 items in digest mode (default 5); full mode ignores it
+#
+# The email is as long as its content -- nothing is trimmed. Past ~102 KB
+# Gmail shows the start and a "View entire message" link.
+
+[[master]]
+name = "morning"
+title = "Morning Report"
+send_at = "06:45"
+enabled = true
+send = false
+llm_intro = true
+max_age_hours = 24
+skip_empty = true
+
+  [[master.section]]
+  task = "disasters"
+  mode = "full"
+
+  [[master.section]]
+  task = "followup_radar"
+  mode = "full"
+
+  [[master.section]]
+  task = "osint_movements"
+  mode = "full"
+
+  [[master.section]]
+  task = "osint_air_sample"
+  mode = "full"
+
+  [[master.section]]
+  task = "briefing"
+  mode = "full"
+  briefing = "defense"
+
+  [[master.section]]
+  task = "briefing"
+  mode = "full"
+  briefing = "conflicts"

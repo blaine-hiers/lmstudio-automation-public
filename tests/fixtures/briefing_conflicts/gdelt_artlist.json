@@ -1,0 +1,6 @@
+{"articles": [
+ {"url": "https://news.example.com/2026/09/25/ukraine-kharkiv-drone-strike", "url_mobile": "", "title": "Ukraine says Russian drone strike hits Kharkiv overnight", "seendate": "20260925T031500Z", "socialimage": "", "domain": "news.example.com", "language": "English", "sourcecountry": "United States"},
+ {"url": "https://world.example.org/gaza-ceasefire-talks", "url_mobile": "", "title": "Gaza ceasefire talks resume in Cairo", "seendate": "20260925T020000Z", "socialimage": "", "domain": "world.example.org", "language": "English", "sourcecountry": "United Kingdom"},
+ {"url": "https://africa.example.net/sudan-el-fasher-shelling", "url_mobile": "", "title": "Sudan: shelling of El Fasher camp reported", "seendate": "20260924T220000Z", "socialimage": "", "domain": "africa.example.net", "language": "English", "sourcecountry": "Kenya"},
+ {"url": "javascript:alert(1)", "title": "bad link", "seendate": "20260925T010000Z", "domain": "evil.example"}
+]}

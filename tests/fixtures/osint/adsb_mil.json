@@ -1,0 +1,12 @@
+{
+    "ac": [
+        {"hex": "ae1460", "t": "C17", "flight": "REACH123 ", "lat": 51.48, "lon": -0.45, "alt_baro": 33000},
+        {"hex": "43c123", "t": "kc135", "flight": "TANKR01 ", "lat": 51.9, "lon": 1.2, "alt_baro": 28000},
+        {"hex": "7c1234", "t": "F16", "flight": "VIPER22 ", "lat": 35.1, "lon": 129.0, "alt_baro": "ground"},
+        {"hex": "unknown-pos", "t": "C130", "flight": "SLAM01 ", "lat": "n/a", "lon": -0.9, "alt_baro": 12000},
+        {"hex": "", "t": "F35", "flight": "GHOST01 ", "lat": 40.0, "lon": 40.0, "alt_baro": 30000},
+        {"hex": "9a0001", "t": "", "flight": "", "lat": 34.5, "lon": -118.2, "alt_baro": 5000}
+    ],
+    "total": 6,
+    "now": 1758822000000
+}

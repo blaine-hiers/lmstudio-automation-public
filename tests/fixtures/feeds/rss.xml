@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+  <title>Example Harbour News</title>
+  <link>https://news.example.org/</link>
+  <item>
+    <title>Port reopens after storm</title>
+    <link>https://news.example.org/port-reopens</link>
+    <description><![CDATA[<p>The <b>harbour</b> reopened &amp; ships resumed.</p><img src="x.png">]]></description>
+    <pubDate>Thu, 24 Sep 2026 06:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Undated notice</title>
+    <link>https://news.example.org/notice</link>
+    <description>No date on this one.</description>
+  </item>
+  <item>
+    <title>Garbled date</title>
+    <link>https://news.example.org/garbled</link>
+    <pubDate>sometime last week</pubDate>
+  </item>
+  <item>
+    <description>An item with no title is skipped.</description>
+  </item>
+</channel>
+</rss>

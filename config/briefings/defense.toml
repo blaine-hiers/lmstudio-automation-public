@@ -1,0 +1,50 @@
+# Defense industry briefing (#57): trade-press coverage plus a DoD
+# contract-awards ledger (config/briefings/example.toml documents every key).
+#
+# Ships without `enabled` -- shows as "new" on the dashboard until a human
+# reviews it and flips it on.
+
+[briefing]
+title = "Defense industry"
+description = "DoD contract awards and defense trade press."
+every_hours = 20
+
+interests = [
+    "U.S. Department of Defense contract awards: who won, how much, for what.",
+    "Defense industry news: major weapons programs, acquisition decisions, industrial base.",
+]
+
+keywords = ["contract", "defense", "pentagon", "army", "navy", "air force", "space force", "dod"]
+prefilter = true
+
+# The ledger extension (below) renders "today's awards" / totals / notable
+# sections after the stories; it's opt-in (not on by default) since it adds
+# several sections to every briefing that lists it.
+extensions = ["dod_contracts"]
+
+# ---- sources --------------------------------------------------------------
+
+# Trade press. UNVERIFIED: check these feed URLs still resolve on the first
+# real run -- neither could be checked live from this environment.
+[[sources.feeds]]
+name = "Defense News"
+url = "https://www.defensenews.com/arc/outboundfeeds/rss/"
+lean = "unknown"
+reliability = "high"
+group = "trade press"
+
+[[sources.feeds]]
+name = "Breaking Defense"
+url = "https://breakingdefense.com/feed/"
+lean = "unknown"
+reliability = "high"
+group = "trade press"
+
+# DoD contract-award ledger (lmsa/briefing/adapters/dod_contracts.py).
+# UNVERIFIED: the default listing URL (see DEFAULT_LISTING_URL in that
+# module) could not be checked live either -- check it on the first run and
+# override with `url = "..."` here if defense.gov's layout has moved.
+[[sources.api]]
+name = "DoD contract awards"
+adapter = "dod_contracts"
+group = "ledger"

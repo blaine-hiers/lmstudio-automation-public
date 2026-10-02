@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>USNI News Fleet and Marine Tracker</title>
+    <item>
+      <title>USNI News Fleet and Marine Tracker: Sept. 22, 2026</title>
+      <link>https://news.usni.org/2026/09/22/fleet-tracker-sept-22-2026</link>
+      <pubDate>Mon, 22 Sep 2026 14:00:00 +0000</pubDate>
+      <description>Weekly fleet tracker.</description>
+    </item>
+    <item>
+      <title>USNI News Fleet and Marine Tracker: Sept. 15, 2026</title>
+      <link>https://news.usni.org/2026/09/15/fleet-tracker-sept-15-2026</link>
+      <pubDate>Mon, 15 Sep 2026 14:00:00 +0000</pubDate>
+      <description>Weekly fleet tracker.</description>
+    </item>
+  </channel>
+</rss>

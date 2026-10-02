@@ -1,0 +1,275 @@
+# Load-aware dispatcher schedule.
+#
+# Task Scheduler runs `python -m tasks.dispatch` every 30 minutes; it reads
+# this file each time, runs whatever is due -- but only when the PC is quiet
+# -- and loads models on demand. See README "Dispatcher".
+#
+# Per task:
+#   cadence          "daily HH:MM" | "weekly <mon..sun> HH:MM" | "every N hours"
+#                    (N divides 24; runs at local midnight + k*N). Local wall-clock time.
+#   deadline_hours   how long a due run may wait for a quiet PC (>= 0.5). The clock
+#                    starts when the dispatcher first sees it due, so time the PC was
+#                    off or asleep doesn't count. Still blocked at the deadline -> the
+#                    run is skipped and listed in the dispatcher report / evening recap.
+#   model            "chat" (LMSA_CHAT_MODEL) | "vision" (LMSA_VISION_MODEL) | "none"
+#                    ("none" includes embeddings-only tasks). Vision-batch tasks run with
+#                    LMSA_CHAT_MODEL set to the vision model, so their text calls
+#                    (extract/chat) go to the one resident model: qwen3-vl-8b handles
+#                    text extraction too. Any model a task still JIT-loads (e.g. the
+#                    embedding model) is unloaded by the dispatcher after its batch.
+#                    "whisper" = speech-to-text the task runs itself (faster-whisper):
+#                    runs after the no-model batch, only once no LM Studio model is
+#                    loaded (the dispatcher unloads its own first) and free VRAM covers
+#                    [models].whisper_size_mb + headroom. Never shares the GPU with chat/vision.
+#   timeout_minutes  optional; defaults to [dispatch].task_timeout_minutes.
+#   enabled          optional; false leaves the task out.
+#   idle_minutes     optional, model "none" tasks only: this task's own input-idle
+#                    requirement when lower than the day/overnight one (0 = run even
+#                    while you're using the PC; the other busy checks still apply).
+# A task that fails is recorded as an error and not retried until its next run.
+
+[dispatch]
+overnight = ["01:00", "07:00"]   # preferred window (local time)
+idle_minutes = 15                # daytime: need this long without keyboard/mouse input
+overnight_idle_minutes = 0       # overnight: 0 = don't require input-idle (other checks still apply)
+gpu_util_max = 30                # busy above this GPU utilization (%)
+vram_headroom_mb = 1024          # free VRAM must cover the model plus this
+model_ttl_seconds = 900          # TTL on every model the dispatcher loads (a crash leaves nothing pinned)
+task_timeout_minutes = 60        # per task; on timeout the task's whole process tree is killed
+max_run_minutes = 240            # stop starting new tasks after this (Task Scheduler kills the run at 6 h;
+                                 # task timeouts are also capped to end by 5.5 h). Must be below 330.
+stop_server_at_end = false       # `lms server stop` after a batch (only if no model is still loaded)
+
+# Busy while any of these processes runs. Matched on the image name,
+# case-insensitive, ".exe" optional. Ships empty: nothing blocks.
+blocked_processes = [
+    # "steam.exe",
+    # "obs64",
+]
+
+[models]
+chat_size_mb = 8200     # qwen/qwen3-14b weights are ~7.9 GB
+vision_size_mb = 6400   # qwen/qwen3-vl-8b weights are ~6.2 GB
+whisper_size_mb = 2000  # faster-whisper small/medium int8 on CUDA, plus working memory
+
+# --- no model ---------------------------------------------------------------
+
+[tasks.inbox_index]
+cadence = "daily 01:05"
+deadline_hours = 12
+model = "none"
+
+[tasks.server_logs]
+cadence = "daily 01:10"
+deadline_hours = 12
+model = "none"
+
+[tasks.unsubscribe]
+cadence = "weekly sat 01:15"
+deadline_hours = 48
+model = "none"
+
+[tasks.doc_index]
+cadence = "weekly sun 01:20"
+deadline_hours = 48
+model = "none"
+timeout_minutes = 120
+
+[tasks.osint_air_sample]     # #58: samples adsb.lol /v2/mil. Cadence only expresses
+                              # hourly divisors of 24, so "every 1 hours" is the
+                              # tightest schedule can offer; the dispatcher itself
+                              # still only ticks every 30 min regardless.
+cadence = "every 1 hours"
+deadline_hours = 1
+
+[tasks.markets]            # #60: Polymarket/Manifold/Metaculus odds snapshot + geo_metrics
+cadence = "daily 01:10"    # "markets" rows; runs before risk_map so the same day's data is used
+deadline_hours = 6
+model = "none"
+
+[tasks.risk_map]           # GDELT at 1 req / 5 s: ~10 min for the default 60 countries
+cadence = "daily 01:25"
+deadline_hours = 12
+model = "none"
+
+[tasks.disasters]          # #59: GDACS + USGS + NASA EONET (+ optional FIRMS), before risk_map reads hazard
+cadence = "daily 01:15"
+deadline_hours = 12
+model = "none"
+
+[tasks.master_report]    # #103: config/master_report.toml; reads earlier runs, re-runs nothing.
+cadence = "daily 06:45"  # A section whose run for today isn't there yet shows as STALE.
+deadline_hours = 3
+model = "none"           # llm_intro uses the chat model only if it can get it, else no intro,
+idle_minutes = 0         # so LM Studio's state never holds the email; nor does input activity
+                         # (the first tick after 06:45 may land at 07:00+, outside overnight).
+
+# --- chat model ---------------------------------------------------------------
+
+[tasks.healthcheck]
+cadence = "daily 01:30"
+deadline_hours = 6
+model = "chat"
+
+[tasks.pretriage]
+cadence = "daily 01:35"
+deadline_hours = 12
+model = "chat"
+
+[tasks.github_digest]
+cadence = "daily 01:40"
+deadline_hours = 12
+model = "chat"
+
+[tasks.deadlines]
+cadence = "daily 01:45"
+deadline_hours = 12
+model = "chat"
+
+[tasks.packages]
+cadence = "daily 01:50"
+deadline_hours = 12
+model = "chat"
+
+[tasks.receipts]
+cadence = "daily 01:55"
+deadline_hours = 12
+model = "chat"
+
+[tasks.travel]
+cadence = "daily 02:00"
+deadline_hours = 12
+model = "chat"
+
+[tasks.job_tracker]
+cadence = "daily 02:05"
+deadline_hours = 12
+model = "chat"
+
+[tasks.followup_radar]
+cadence = "daily 02:10"
+deadline_hours = 12
+model = "chat"
+
+[tasks.phish_check]
+cadence = "daily 02:15"
+deadline_hours = 12
+model = "chat"
+
+[tasks.labeler]            # dry-run by default: proposes labels, changes nothing
+cadence = "daily 02:20"
+deadline_hours = 12
+model = "chat"
+
+[tasks.reply_drafts]
+cadence = "daily 02:25"
+deadline_hours = 12
+model = "chat"
+
+[tasks.price_watch]
+cadence = "every 6 hours"
+deadline_hours = 5
+model = "chat"
+
+[tasks.newsletter_zine]
+cadence = "weekly sat 02:30"
+deadline_hours = 48
+model = "chat"
+
+[tasks.inbox_weather]
+cadence = "weekly sun 02:30"
+deadline_hours = 48
+model = "chat"
+
+[tasks.related_notes]     # #65: related/near-dup docs from tasks.doc_index's embeddings
+cadence = "weekly sun 02:35"
+deadline_hours = 48
+model = "chat"
+
+[tasks.front_page]
+cadence = "daily 05:30"
+deadline_hours = 6
+model = "chat"
+
+[tasks.inbox_brief]      # 05:30 (was 06:00): well before master_report's 06:45 send (#103)
+cadence = "daily 05:30"
+deadline_hours = 4
+model = "chat"
+
+[tasks.evening_recap]
+cadence = "daily 21:00"
+deadline_hours = 3
+model = "chat"
+
+[tasks.osint_movements]      # #58: aggregates tasks.osint_air_sample's samples + USNI Fleet Tracker
+cadence = "daily 06:30"
+deadline_hours = 12
+model = "chat"
+
+[tasks.bookmarks]
+cadence = "daily 02:45"
+deadline_hours = 24
+model = "chat"
+timeout_minutes = 90
+
+# --- vision model -------------------------------------------------------------
+
+# These also make text (extract) calls; the dispatcher points them at the
+# vision model (LMSA_CHAT_MODEL override) so only one model is ever resident.
+[tasks.attachments]
+cadence = "daily 03:00"
+deadline_hours = 12
+model = "vision"
+
+[tasks.file_sorter]        # dry-run by default: proposes moves, moves nothing
+cadence = "daily 03:10"
+deadline_hours = 12
+model = "vision"
+
+[tasks.doc_inbox]          # dry-run by default: proposes filing, moves nothing
+cadence = "daily 03:20"
+deadline_hours = 12
+model = "vision"
+
+[tasks.photo_index]        # #64: read-only; captions new/changed photos, capped per run
+cadence = "weekly sun 03:30"
+deadline_hours = 48
+model = "vision"
+timeout_minutes = 120
+
+# Not scheduled on purpose: ask, doc_search (interactive), shootout (loads
+# every model), gmail_probe, style_preview, index (diagnostics/manual).
+
+# --- voice memos (#62) ----------------------------------------------------------
+
+# Phase 1 (whisper): transcribe new recordings. Phase 2 (chat): summarize them.
+# Two entries so whisper and the chat model are never resident together; the
+# dispatcher always runs the whisper batch before the chat batch.
+[tasks.voice_transcribe]
+cadence = "daily 01:25"
+deadline_hours = 12
+model = "whisper"
+timeout_minutes = 120
+
+[tasks.voice_memos]
+cadence = "daily 01:30"
+deadline_hours = 12
+model = "chat"
+
+# --- briefings (#52) ----------------------------------------------------------
+# One entry for every config/briefings/*.toml: with no --name the task runs each
+# briefing whose file says `enabled = true` and whose last successful run is at
+# least its `every_hours` old (default 20). A briefing that wants to run more
+# often than daily needs this cadence raised too (e.g. "every 6 hours").
+[tasks.briefing]
+cadence = "daily 04:30"
+deadline_hours = 6
+model = "chat"
+timeout_minutes = 120
+
+# --- site watch (#53) ----------------------------------------------------------
+# config/site_watch.toml: fetch, diff and judge each watched page once a day.
+[tasks.site_watch]
+cadence = "daily 03:10"
+deadline_hours = 6
+model = "chat"

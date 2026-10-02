@@ -1,0 +1,34 @@
+# Dashboard settings (python -m tasks.dashboard).
+#
+# [manual.<task>] marks a task manual-only: the dashboard groups it under
+# "Diagnostics & manual" and doesn't flag it NEW for being missing from
+# config/schedule.toml. `note` (optional) says why. The dashboard's
+# "mark manual-only" button appends a table here; edit this file in the
+# Setup page's Config files card (validated, backed up, written atomically).
+
+[manual.ask]
+note = "interactive: needs a question"
+
+[manual.doc_search]
+note = "interactive: needs a query"
+
+[manual.shootout]
+note = "loads every model"
+
+[manual.gmail_probe]
+note = "diagnostic"
+
+[manual.style_preview]
+note = "diagnostic"
+
+[manual.index]
+note = "rebuilds the report hub by hand"
+
+[manual.healthcheck]
+note = "also scheduled; listed here so it groups with the diagnostics"
+
+[manual.inbox_actions]
+note = "runs from the Inbox panel's bulk archive / mark read buttons"
+
+[manual.go_deep]
+note = "interactive: launched from a briefing story card's go deep link"

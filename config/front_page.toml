@@ -1,0 +1,47 @@
+# Example config for tasks/front_page.py -- copy and edit to taste.
+#
+# [fetch] caps how much is pulled per source (and how far the report's
+# candidate pool goes); [[interests]] are the descriptions ranked items
+# are scored against; [[source.subreddits]] and [[source.feeds]] list
+# where items come from besides Hacker News.
+
+[fetch]
+hn_list = "topstories"       # "topstories" or "beststories"
+hn_limit = 40
+subreddit_limit = 20
+feed_limit = 20
+top_n = 30
+wildcard_n = 5
+recency_half_life_hours = 36
+snippet_chars = 4000
+
+[[interests]]
+name = "local-llm"
+description = "Running large language models locally: llama.cpp, LM Studio, quantization, GGUF/GGML, fine-tuning, local inference servers, on-device RAG, open-weight model releases."
+
+[[interests]]
+name = "homelab"
+description = "Home server infrastructure: NAS builds, Proxmox, Docker and Kubernetes at home, self-hosting services, home networking gear, Home Assistant and smart-home automation."
+
+[[interests]]
+name = "dev-tooling"
+description = "Developer tools and workflow: CLIs, editors, build systems, linters and formatters, debuggers, terminal and shell workflows, new programming languages, CI tooling."
+
+[[source.subreddits]]
+name = "LocalLLaMA"
+
+[[source.subreddits]]
+name = "homelab"
+
+[[source.subreddits]]
+name = "selfhosted"
+
+[[source.feeds]]
+name = "Simon Willison"
+url = "https://simonwillison.net/atom/everything/"
+
+# Deliberately not mirroring HN via hnrss.org here: the HN API fetch above
+# already covers it, and cross-source dedupe (see tasks/front_page.py
+# dedupe()) only kicks in when the two disagree on which of a story's URLs
+# to use, so pointing both at the same source is redundant rather than
+# a real example of a second RSS feed.

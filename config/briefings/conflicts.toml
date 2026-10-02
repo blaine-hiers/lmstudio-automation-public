@@ -1,0 +1,205 @@
+# Conflict tracker (#55): armed conflicts worldwide, grouped into theaters and
+# ranked by activity (stories x sources x severity), with an escalation /
+# de-escalation flag per theater and one world map shaded by activity.
+# Regions are a filter, not a fixed list: leave `regions` out for global.
+#
+# Run it:  python -m tasks.briefing --name conflicts
+# No `enabled` key on purpose: the dashboard shows this file as NEW until you
+# enable it (then the daily [tasks.briefing] run at 04:30 picks it up).
+#
+# Feed URLs could not be checked when this file was written: every one marked
+# "unverified: check on first run" may be wrong or moved. The report's
+# "Sources this run" table shows what each source returned, and a feed that
+# fails is listed with its error in Notes -- fix or delete it then.
+
+[briefing]
+title = "Conflict tracker"
+description = "Armed conflicts worldwide: theaters ranked by activity, escalation flags, quoted casualty and displacement figures."
+every_hours = 20
+
+interests = [
+    "Armed conflicts and wars anywhere: offensives, air and drone strikes, front-line changes, insurgencies, coups.",
+    "Ceasefires, truces, peace talks and their breakdown; withdrawals and troop buildups.",
+    "Humanitarian impact of conflict: civilian casualties, displacement, famine, sieges and blockades.",
+    "Escalation risks between states: cross-border attacks, missile tests, naval incidents, nuclear threats.",
+]
+
+keywords = [
+    "war", "attack", "strike", "airstrike", "missile", "drone", "shelling", "artillery", "bombing",
+    "killed", "casualties", "ceasefire", "truce", "peace talks", "troops", "military", "offensive",
+    "frontline", "front line", "insurgent", "militant", "rebel", "militia", "clashes", "fighting",
+    "conflict", "displaced", "displacement", "refugee", "humanitarian", "siege", "hostage", "invasion",
+    "coup", "armed", "violence",
+]
+prefilter = true
+
+# regions = ["UA", "SD", "PS"]   # optional ISO alpha-2 filter
+
+# Sources are collected feeds -> search -> api, and max_items stops the
+# collection when it is reached -- so it must stay above the sum of every
+# source's `limit` (510 today) or the API sources at the end (ReliefWeb,
+# GDELT) get starved. Raise it when you add a source.
+max_items = 600
+max_stories = 40
+max_docs_per_story = 6
+follow_links = true        # GDELT items are titles only; fetch the article text
+max_fetch = 30
+cluster_threshold = 0.82
+half_life_hours = 30
+memory_days = 7
+
+extensions = ["theaters", "markets"]  # lmsa/briefing/adapters/theaters.py, markets.py (#60: odds on stories + biggest movers)
+
+# ---- think tanks ----------------------------------------------------------
+# Checked 2026-09-28 (#117) and dropped: no feed an honest crawler can reach.
+# ISW and Crisis Group sit behind Cloudflare; RAND's robots.txt is 403 to
+# non-browser agents (lmsa.web reads that as disallow-all); CSIS's only live
+# feed (/rss.xml) stopped in 2016. Don't re-add them without a new URL.
+
+[[sources.feeds]]
+name = "Brookings"
+url = "https://www.brookings.edu/feed/?post_type=article"   # /feed/ is not valid XML
+group = "think tanks"
+lean = "center-left"
+reliability = "high"
+limit = 20
+
+# ---- wires and world desks --------------------------------------------------
+# Reuters and AP publish no public RSS; they come in through GDELT and the
+# optional SearXNG queries below.
+
+[[sources.feeds]]
+name = "BBC World"
+url = "https://feeds.bbci.co.uk/news/world/rss.xml"
+group = "world"
+lean = "intl"
+reliability = "high"
+limit = 40
+
+[[sources.feeds]]
+name = "Al Jazeera"
+url = "https://www.aljazeera.com/xml/rss/all.xml"
+group = "world"
+lean = "state-media"      # Qatari state-funded
+reliability = "mixed"
+limit = 40
+
+[[sources.feeds]]
+name = "The Guardian World"
+url = "https://www.theguardian.com/world/rss"
+group = "world"
+lean = "center-left"
+reliability = "high"
+limit = 40
+
+[[sources.feeds]]
+name = "NPR World"
+url = "https://feeds.npr.org/1004/rss.xml"
+group = "world"
+lean = "center-left"
+reliability = "high"
+limit = 30
+
+[[sources.feeds]]
+name = "DW World"
+url = "https://rss.dw.com/rdf/rss-en-world"         # unverified: check on first run
+group = "world"
+lean = "intl"             # German public international broadcaster
+reliability = "high"
+limit = 30
+
+[[sources.feeds]]
+name = "France 24"
+url = "https://www.france24.com/en/rss"             # unverified: check on first run
+group = "world"
+lean = "intl"             # French public international broadcaster
+reliability = "high"
+limit = 30
+
+[[sources.feeds]]
+name = "UN News"
+url = "https://news.un.org/feed/subscribe/en/news/all/rss.xml"   # unverified: check on first run
+group = "world"
+lean = "intl"
+reliability = "high"
+limit = 30
+
+[[sources.feeds]]
+name = "TASS"
+url = "https://tass.com/rss/v2.xml"                 # unverified: check on first run
+group = "state media"
+lean = "state-media"      # Russian state news agency: read for the Kremlin's framing
+reliability = "low"
+limit = 20
+
+# ---- independent OSINT --------------------------------------------------------
+# S2 Underground (#125): daily "The Wire" intel summaries. Items are video
+# titles + descriptions only. Checked 2026-09-28: the official channel feed
+# (youtube.com/feeds/videos.xml?channel_id=UCTq1zHztiV69Ur8t6jco4CQ) is
+# disallowed by YouTube's robots.txt for every agent, and their X account
+# (x.com/s2_underground) has no public feed -- so the only reachable feed is a
+# third-party fan index. Swap it for an official one if S2 ever publishes one.
+
+[[sources.feeds]]
+name = "S2 Underground"
+url = "https://s2underground.com/feed"   # third-party "unofficial fan index; not affiliated with S2"
+group = "osint"
+lean = "right"            # veteran-run, libertarian-leaning independent outlet
+reliability = "low"
+limit = 15
+prefilter = false         # items are title-only ("The Wire - <date>"): no keyword can match until follow_links fetches the page (#128)
+
+# ---- APIs -------------------------------------------------------------------
+
+# ReliefWeb (UN OCHA) situation reports: free, no key.
+[[sources.api]]
+adapter = "reliefweb"
+name = "ReliefWeb"
+query = "conflict OR violence OR displacement OR ceasefire"
+days = 2
+group = "humanitarian"
+lean = "intl"
+reliability = "high"
+limit = 60
+
+# GDELT DOC 2.0 article lists: free, no key, throttled to 1 request / 5 s
+# (at most 4 GDELT queries run per briefing run). Titles only; the text
+# comes from follow_links. Sources vary widely, hence "mixed".
+[[sources.api]]
+adapter = "gdelt_doc"
+name = "GDELT: armed conflict"
+query = "theme:ARMEDCONFLICT sourcelang:english"
+timespan = "24h"
+group = "gdelt"
+reliability = "mixed"
+limit = 75
+
+[[sources.api]]
+adapter = "gdelt_doc"
+name = "GDELT: ceasefires and talks"
+query = "(ceasefire OR truce OR \"peace talks\") sourcelang:english"
+timespan = "24h"
+group = "gdelt"
+reliability = "mixed"
+limit = 40
+
+# ---- optional web search (needs LMSA_SEARXNG_URL; see README "Web search") --
+# Without SearXNG these show as a note, not a failure.
+
+[[sources.search]]
+name = "search: Reuters conflict"
+query = "site:reuters.com war OR ceasefire OR offensive"
+time_range = "day"
+group = "wires"
+lean = "center"
+reliability = "high"
+limit = 20
+
+[[sources.search]]
+name = "search: AP conflict"
+query = "site:apnews.com war OR ceasefire OR offensive"
+time_range = "day"
+group = "wires"
+lean = "center"
+reliability = "high"
+limit = 20

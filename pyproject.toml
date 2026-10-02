@@ -1,0 +1,46 @@
+[project]
+name = "lmstudio-automation"
+version = "0.1.0"
+description = "Local-LLM automations, data pulls, and styled HTML reports via the LM Studio API"
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=1.40",
+    "python-dotenv>=1.0",
+    "keyring>=25",
+    "imapclient>=3",
+    "pillow>=10",
+    "pypdf>=4",
+    "numpy>=1.26",
+    "python-docx>=1.1",
+    "pypdfium2>=4",
+    "trafilatura>=2",
+    # trafilatura -> justext declares its lxml dependency as "lxml[html_clean]",
+    # but lxml's own extra is named "html-clean" (hyphen); pip only treats the
+    # two spellings as equivalent (PEP 685 normalisation) from ~23.1 onward, so
+    # a venv whose bundled pip is older (e.g. Python 3.11.1's ensurepip, 22.3.1)
+    # silently skips installing lxml_html_clean, and justext's import of
+    # lxml.html.clean then raises ImportError. Depend on it directly so
+    # extraction works regardless of the installing pip's version.
+    "lxml_html_clean>=0.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-xdist>=3", "icalendar>=6", "tzdata>=2024.1"]
+# Voice memos (#62): local speech-to-text. Heavy (CTranslate2); only tasks.voice_memos needs it.
+voice = ["faster-whisper>=1.0"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["lmsa*", "tasks*"]
+
+[tool.setuptools.package-data]
+lmsa = ["theme/*.css", "geo_data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: takes >=0.5s (real process trees, timers); excluded by -m 'not slow'",
+]

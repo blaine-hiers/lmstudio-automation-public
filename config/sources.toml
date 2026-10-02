@@ -1,0 +1,40 @@
+# Shared source lean + reliability tags (#69) -- the owner's OWN tags, set
+# by hand once, never scraped from a rating site. Reused across every
+# briefing so a source's tags don't need repeating in each briefing file.
+#
+# Matched by each `[[sources.<kind>]]` entry's resolved `name` (its explicit
+# `name = "..."`, else its url/query/adapter -- see
+# `lmsa/briefing/config.py::_source_entry`).
+#
+# Precedence: a `lean` / `reliability` set directly on a briefing's own
+# `[[sources.*]]` entry always wins over this file; this file wins over
+# "unknown". Append your own entries as you tag new sources -- don't
+# reorder or edit anyone else's line.
+#
+#   lean:         left | center-left | center | center-right | right | state-media | intl | unknown
+#   reliability:  high | mixed | low | unknown
+
+[[sources]]
+name = "Reuters"
+lean = "center"
+reliability = "high"
+
+[[sources]]
+name = "Associated Press"
+lean = "center"
+reliability = "high"
+
+[[sources]]
+name = "Politico"
+lean = "center-left"
+reliability = "high"
+
+[[sources]]
+name = "Fox News"
+lean = "right"
+reliability = "mixed"
+
+[[sources]]
+name = "MSNBC"
+lean = "left"
+reliability = "mixed"

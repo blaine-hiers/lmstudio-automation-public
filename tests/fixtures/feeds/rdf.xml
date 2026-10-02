@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://purl.org/rss/1.0/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel rdf:about="https://bulletin.example.org/">
+    <title>Example RDF Bulletin</title>
+    <link>https://bulletin.example.org/</link>
+  </channel>
+  <item rdf:about="https://bulletin.example.org/a">
+    <title>RDF item A</title>
+    <link>https://bulletin.example.org/a</link>
+    <description>Plain &lt;i&gt;text&lt;/i&gt; summary.</description>
+    <dc:date>2026-09-22T08:00:00Z</dc:date>
+  </item>
+  <item rdf:about="https://bulletin.example.org/b">
+    <title>RDF item B</title>
+    <description>No link element, no date.</description>
+  </item>
+  <item rdf:about="javascript:alert(1)">
+    <title>RDF item C</title>
+  </item>
+</rdf:RDF>

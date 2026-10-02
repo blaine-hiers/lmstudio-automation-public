@@ -1,0 +1,34 @@
+# Label set for tasks/labeler.py.
+#
+# Every [[label]] here is a Gmail label the model is *allowed* to propose.
+# Anything the model returns outside this set is dropped before anything is
+# applied -- see tasks/labeler.py:classify(). Gmail system labels (\Inbox,
+# \Trash, \Spam, CATEGORY_*, [Gmail]/..., ...) are refused as a config
+# error: applying or undoing them would move or archive mail. A label listed here
+# that doesn't already exist in your Gmail account is created automatically
+# by Gmail itself the first time it's applied (STORE +X-GM-LABELS); this
+# tool never creates labels ahead of time.
+#
+# `name` must be the exact Gmail label name (nested labels use "Parent/Child").
+# `description` is shown to the model as the reason to pick that label --
+# keep it short and mutually distinguishable from the others.
+
+[[label]]
+name = "Receipts"
+description = "Purchase confirmations, invoices, order/shipping receipts."
+
+[[label]]
+name = "Travel"
+description = "Flight/hotel/car confirmations, itineraries, boarding passes."
+
+[[label]]
+name = "Action Needed"
+description = "Expects a reply, a decision, or a task from the recipient."
+
+[[label]]
+name = "FYI"
+description = "Informational only; no reply or action expected."
+
+[[label]]
+name = "Newsletters"
+description = "Recurring editorial or marketing sends meant to be read, not actioned."

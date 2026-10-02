@@ -1,0 +1,36 @@
+{
+  "time": 12,
+  "href": "https://api.reliefweb.int/v1/reports?appname=lmstudio-automation",
+  "totalCount": 3,
+  "count": 3,
+  "data": [
+    {
+      "id": "4100001",
+      "score": 1,
+      "fields": {
+        "title": "Sudan: El Fasher flash update no. 12",
+        "url": "https://reliefweb.int/node/4100001",
+        "url_alias": "https://reliefweb.int/report/sudan/sudan-el-fasher-flash-update-no-12",
+        "date": {"created": "2026-09-24T14:00:00+00:00", "original": "2026-09-24T00:00:00+00:00"},
+        "source": [{"name": "UN Office for the Coordination of Humanitarian Affairs", "shortname": "OCHA"}],
+        "primary_country": {"iso3": "sdn", "name": "Sudan"},
+        "country": [{"iso3": "sdn", "name": "Sudan"}, {"iso3": "tcd", "name": "Chad"}],
+        "body": "Fighting in Sudan continued around El Fasher. At least 40 people were killed in El Fasher on Monday, according to local officials. More than 12,000 people have been displaced towards Tawila since the weekend, partners report."
+      }
+    },
+    {
+      "id": "4100002",
+      "score": 1,
+      "fields": {
+        "title": "Ukraine: Kharkiv humanitarian situation report",
+        "url": "https://reliefweb.int/node/4100002",
+        "date": {"created": "2026-09-24T09:30:00+00:00"},
+        "source": [{"name": "UN Office for the Coordination of Humanitarian Affairs", "shortname": "OCHA"}],
+        "primary_country": {"iso3": "UKR"},
+        "country": [{"iso3": "UKR"}],
+        "body": "Ukraine: drone attacks on Kharkiv damaged energy infrastructure; humanitarian partners delivered aid to frontline communities."
+      }
+    },
+    {"id": "junk", "fields": "not an object"}
+  ]
+}

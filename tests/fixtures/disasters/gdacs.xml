@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:gdacs="http://www.gdacs.org" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
+<channel>
+<title>GDACS - RSS</title>
+<item>
+<title>Green earthquake alert (Magnitude 5.6M, Depth 10km) in Indonesia</title>
+<description>A green earthquake alert was issued.</description>
+<link>https://www.gdacs.org/report.aspx?eventid=1111111&amp;eventtype=EQ</link>
+<pubDate>Thu, 24 Sep 2026 05:00:00 GMT</pubDate>
+<gdacs:eventid>1111111</gdacs:eventid>
+<gdacs:eventtype>EQ</gdacs:eventtype>
+<gdacs:alertlevel>Green</gdacs:alertlevel>
+<gdacs:country>Indonesia</gdacs:country>
+<gdacs:iso3>IDN</gdacs:iso3>
+<gdacs:fromdate>2026-09-24T05:00:00</gdacs:fromdate>
+<geo:Point>
+<geo:lat>-7.70</geo:lat>
+<geo:long>115.20</geo:long>
+</geo:Point>
+</item>
+<item>
+<title>Red flood alert in Philippines</title>
+<description>A red flood alert was issued.</description>
+<link>https://www.gdacs.org/report.aspx?eventid=2222222&amp;eventtype=FL</link>
+<pubDate>Wed, 23 Sep 2026 12:00:00 GMT</pubDate>
+<gdacs:eventid>2222222</gdacs:eventid>
+<gdacs:eventtype>FL</gdacs:eventtype>
+<gdacs:alertlevel>Red</gdacs:alertlevel>
+<gdacs:country>Philippines</gdacs:country>
+<gdacs:iso3>PHL</gdacs:iso3>
+<gdacs:fromdate>2026-09-23T12:00:00</gdacs:fromdate>
+<geo:Point>
+<geo:lat>14.60</geo:lat>
+<geo:long>120.98</geo:long>
+</geo:Point>
+</item>
+<item>
+<title>Orange earthquake alert in Armenia</title>
+<description>An orange earthquake alert was issued.</description>
+<link>https://www.gdacs.org/report.aspx?eventid=3333333&amp;eventtype=EQ</link>
+<pubDate>Wed, 23 Sep 2026 09:00:00 GMT</pubDate>
+<gdacs:eventid>3333333</gdacs:eventid>
+<gdacs:eventtype>EQ</gdacs:eventtype>
+<gdacs:alertlevel>Orange</gdacs:alertlevel>
+<gdacs:country>Armenia</gdacs:country>
+<gdacs:iso3>ARM</gdacs:iso3>
+<gdacs:fromdate>2026-09-23T09:00:00</gdacs:fromdate>
+<geo:Point>
+<geo:lat>40.18</geo:lat>
+<geo:long>44.51</geo:long>
+</geo:Point>
+</item>
+</channel>
+</rss>

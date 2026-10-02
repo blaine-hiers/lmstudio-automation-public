@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.6,
+        "place": "10km SE of Denpasar, Indonesia",
+        "time": 1790227800000,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us1111111",
+        "type": "earthquake"
+      },
+      "geometry": {"type": "Point", "coordinates": [115.25, -7.75, 10.0]},
+      "id": "us1111111"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 6.5,
+        "place": "120km ESE of Iwo Jima, Japan",
+        "time": 1790157600000,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us2222222",
+        "type": "earthquake"
+      },
+      "geometry": {"type": "Point", "coordinates": [142.5, 24.0, 35.0]},
+      "id": "us2222222"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.2,
+        "place": "9km WSW of Enid, OK",
+        "time": 1790046000000,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us3333333",
+        "type": "earthquake"
+      },
+      "geometry": {"type": "Point", "coordinates": [-124.3, 40.4, 12.0]},
+      "id": "us3333333"
+    }
+  ]
+}

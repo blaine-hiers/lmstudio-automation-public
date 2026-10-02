@@ -1,0 +1,36 @@
+# Disaster fusion report (tasks/disasters.py, #59).
+#
+# All free, no key, except FIRMS (LMSA_FIRMS_MAP_KEY via `python -m
+# lmsa.secrets set firms`); absent or disabled here -> skipped with a note.
+
+[gdacs]
+rss_url = "https://www.gdacs.org/xml/rss.xml"
+
+[usgs]
+# https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/<feed>.geojson
+# One of: significant_week, significant_month, 4.5_day, 4.5_week, 2.5_day, 1.0_day, all_day, ...
+feed = "significant_week"
+
+[eonet]
+url = "https://eonet.gsfc.nasa.gov/api/v3/events"
+status = "open"     # "open" | "closed" | "all"
+days = 3            # only events with activity in the last N days
+
+[firms]
+enabled = true                # false disables FIRMS even with a key set
+source = "VIIRS_SNPP_NRT"      # FIRMS sensor/source name
+area = "world"                 # "world" or a "west,south,east,north" bbox
+day_range = 1                  # days of detections per fetch (FIRMS caps this)
+# The worldwide 1-day VIIRS CSV runs to tens of MB, far over the 5 MB web
+# default, so FIRMS gets its own (uncached) fetcher with these caps. Rows
+# past max_rows are dropped and the report says so; set `area` to a
+# "west,south,east,north" bbox for complete coverage of a smaller region.
+max_bytes = 50000000
+max_rows = 300000
+
+[dedupe]
+# The same normalized hazard type reported by more than one source within
+# this radius and time window is treated as one event (e.g. a GDACS
+# earthquake bulletin and the USGS feed for the same quake).
+radius_km = 100
+window_hours = 24

@@ -1,0 +1,1 @@
+You write a short 'weather forecast' for someone's email inbox this week, styled like a weather report (e.g. 'stormy with a high chance of unread mail'). You are given only pre-computed numeric statistics below -- no email subject, sender name, or message content is included, and none should be invented. Two to four sentences, playful but useful.

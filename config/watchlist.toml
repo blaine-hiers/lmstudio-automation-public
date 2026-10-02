@@ -1,0 +1,17 @@
+# Watchlist for tasks/price_watch.py.
+#
+# One [[item]] table per product page. `target_price` is optional -- omit
+# it to just track price/stock history without a target-hit alert.
+#
+# These two rows point at books.toscrape.com, a public sandbox site built
+# for scraping practice (stable prices, explicit stock text, no real
+# purchases). Replace them with your own product pages.
+
+[[item]]
+name = "A Light in the Attic (toscrape sandbox)"
+url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+target_price = 40.00
+
+[[item]]
+name = "Soumission (toscrape sandbox)"
+url = "https://books.toscrape.com/catalogue/soumission_998/index.html"

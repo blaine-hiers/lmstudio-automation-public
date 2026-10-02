@@ -1,0 +1,52 @@
+# Aircraft type -> class, and world regions as lat/lon bounding boxes.
+# Read only by tasks.osint_movements (the daily aggregate report); the
+# sampler (tasks.osint_air_sample) stores raw type codes and bucketed
+# positions and does no classification itself.
+#
+# [type_class.<class>] = ["ICAO type designator", ...], matched against
+# adsb.lol's "t" field, case-insensitive. A type not listed here (or with
+# no type reported) counts as "unclassified" -- expected for civil/unknown
+# airframes that still show up military-flagged (VIP transports, contractor
+# ISR, etc.), not an error.
+[type_class]
+tanker = ["KC135", "KC10", "KC46", "A332", "A342", "VC10", "A400"]
+isr = ["RC135", "E3TF", "E3CB", "E8", "P8", "P3", "MQ4C", "RQ4", "U2", "EP3", "E6"]
+transport = ["C17", "C130", "C5M", "C5", "C27", "C40"]
+bomber = ["B52", "B1", "B2"]
+fighter = ["F15", "F16", "F18", "F22", "F35", "EUFI", "TYPH", "GRIP", "RFAL"]
+
+# [[region]] rows are checked in order; a bucketed position matches the
+# first box it falls inside (lat_min <= lat <= lat_max, same for lon; all
+# inclusive). No match -> "Other". These are plain lat/lon rectangles, not
+# political borders or greatcircle-aware -- fine for a density/anomaly
+# aggregate, not for anything that needs to be precise near a boundary.
+# None currently cross the antimeridian (lon_min < lon_max always); a
+# region that needed to (e.g. the Pacific split at +/-180) would need two
+# rows.
+[[region]]
+name = "Europe"
+lat_min = 34
+lat_max = 72
+lon_min = -25
+lon_max = 45
+
+[[region]]
+name = "Middle East"
+lat_min = 10
+lat_max = 42
+lon_min = 25
+lon_max = 63
+
+[[region]]
+name = "Indo-Pacific"
+lat_min = -50
+lat_max = 55
+lon_min = 90
+lon_max = 180
+
+[[region]]
+name = "North America"
+lat_min = 5
+lat_max = 72
+lon_min = -170
+lon_max = -50

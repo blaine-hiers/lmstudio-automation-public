@@ -1,0 +1,56 @@
+# Geopolitical risk map (tasks/risk_map.py).
+#
+# Every sub-score is a z-score against the country's own trailing baseline
+# (default 30 days); the composite is the weighted mean of the sub-scores that
+# exist for that country. A missing sub-score is shown as missing and its
+# weight is left out -- it is never counted as zero.
+
+[baseline]
+days = 30                # trailing window, strictly before the scored day
+max_age_days = 7         # a metric older than this (vs the report day) is "stale" and left out
+max_missing_days = 5     # baseline days a metric may lack and still score (more = "gap")
+min_rel_std = 0.05       # baseline std floor as a fraction of |mean| ...
+
+[baseline.min_std]       # ... or at least this tiny absolute floor, per metric in its own
+# units. It only keeps a flat baseline finite and must sit well below real noise:
+# GDELT volume is a share-of-coverage percentage (often 0.0003-0.01), so an
+# all-zero month followed by any real coverage scores at the cap (|z| clipped at 10).
+conflict_volume = 0.00001
+conflict_tone = 0.25
+# hazard (tasks.disasters, #59) is a raw daily sum of the severity weights of
+# the events active on the run's UTC day, per country: GDACS alert level
+# green=1/orange=4/red=10 (an open alert counts every day it stays open),
+# USGS magnitude 1 (<5) to 16 (>=8) on the run after the quake. Only today's
+# row is written each run. When GDACS and USGS both fetched cleanly, every
+# other country gets an explicit 0 row, so a quiet country builds a real
+# all-zero baseline instead of a "gap"; after a partial run quiet countries
+# get no row for that day (the baseline tolerates max_missing_days of those).
+# A single small earthquake (weight 1) is the smallest non-zero day. The
+# floor sits at a third of that smallest step, well below real day-to-day
+# noise, so an all-zero month followed by even one small event scores
+# meaningfully instead of blowing straight to the cap on every tiny signal.
+hazard = 0.3
+markets = 0.01
+
+[weights]                # sub-score -> weight (0 disables it)
+conflict = 0.5           # GDELT conflict-theme coverage volume (+) and tone (- = worse)
+hazard = 0.3             # geo_metrics "hazard" rows (disaster fusion, #59) when present
+markets = 0.2            # geo_metrics "markets" rows (prediction markets, #60) when present
+
+[gdelt]
+# GDELT DOC 2.0 API timelines (TimelineVol + TimelineTone), one pair of
+# requests per country: ~10 s per country at GDELT's 1 request / 5 s.
+per_host_delay = 5.0
+max_countries_per_run = 60   # the rest rotate in on later runs (stalest first)
+# Conflict-related GKG themes, OR-ed together.
+themes = ["ARMEDCONFLICT", "TERROR", "KILL", "PROTEST", "REBELLION"]
+# ISO alpha-2 codes to track (empty = every country with a FIPS code, ~250,
+# which then takes several runs to rotate through).
+countries = [
+    "AF", "AM", "AZ", "BD", "BF", "BR", "BY", "CD", "CF", "CN",
+    "CO", "CU", "DE", "EG", "ET", "FR", "GB", "GE", "HT", "IL",
+    "IN", "IQ", "IR", "JP", "KP", "KR", "LB", "LY", "ML", "MM",
+    "MX", "MZ", "NE", "NG", "PH", "PK", "PS", "RS", "RU", "SA",
+    "SD", "SO", "SS", "SY", "TD", "TR", "TW", "UA", "US", "VE",
+    "XK", "YE", "ZA", "KE", "ER", "LK", "NI", "EC", "TN", "DZ",
+]

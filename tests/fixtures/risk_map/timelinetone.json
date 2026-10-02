@@ -1,0 +1,9 @@
+{"query_details": {"title": "(theme:ARMEDCONFLICT OR theme:TERROR) sourcecountry:UP", "date_resolution": "day"},
+ "timeline": [{"series": "Average Tone", "data": [
+  {"date": "20260920T000000Z", "value": -4.5},
+  {"date": "20260921T000000Z", "value": -4.25},
+  {"date": "20260922T000000Z", "value": "not a number"},
+  {"date": "garbage", "value": -1.0},
+  {"date": "20260923T000000Z", "value": -5.0},
+  {"date": "20260923T120000Z", "value": -3.0}
+ ]}]}
